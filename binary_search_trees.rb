@@ -1,9 +1,9 @@
 class Node
   attr_accessor :left, :data, :right
 
-  def initialize(left, data, right)
-    @left = left
+  def initialize(data, left=nil, right=nil)
     @data = data
+    @left = left
     @right = right
   end
 end
@@ -22,20 +22,39 @@ class Tree
   end
 
   def build_tree(array)
-    return Node.new(nil, array[0], nil) if array.length < 2
+    return nil if array.empty?
+    return Node.new(array[0]) if array.length < 2
 
-    mid_idx = array.length/2
-    mid = array[mid_idx]
-    left_half = (array[0..(mid_idx - 1)])
-    right_half = (array[(mid_idx+1)..-1])
-    left_child = build_tree(left_half)
-    right_child = build_tree(right_half)
-    return Node.new(left_child, mid, right_child)
+    root_index = array.length/2
+    root = array[root_index]
+    left = array[0..root_index-1]
+    right = array[root_index+1..]
+    left_child = build_tree(left)
+    right_child = build_tree(right)
+    return Node.new(root, left_child, right_child)
+  end
+
+  # algo insert:
+  # given a value
+  # navigate the tree going right if the value is bigger than the current node data
+  # and left if the value is smaller until there's no where to go
+
+
+  def insert(value)
+    current_node = @root
+    until current_node.right.nil? || current_node.left.nil?
+      if current_node.data > value
+        current_node = current_node.left
+      else
+        current_node = current_node.right
+      end
+    end
+    current_node.data > value ? current_node.left = Node.new(value) : current_node.right = Node.new(value)
   end
 end
 
 extr_simple_arr = [8]
-simple_array = [1, 2, 3, 5, 7]
+simple_array = [1, 2, 3, 4, 5, 6, 7]
 data_arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 clean_data = data_arr.sort.uniq
 
@@ -43,6 +62,8 @@ clean_data = data_arr.sort.uniq
 my_simple_tree = Tree.new(simple_array)
 my_complicated_tree = Tree.new(clean_data)
 
-puts my_simple_tree.pretty_print
-puts my_complicated_tree.pretty_print
+
+my_complicated_tree.pretty_print
+my_complicated_tree.insert(24)
+my_complicated_tree.pretty_print
 
