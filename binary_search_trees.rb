@@ -1,28 +1,16 @@
 class Node
-  def initialize(left_child, data, right_child)
-    @left_child = left_child
+  attr_accessor :left, :data, :right
+
+  def initialize(left, data, right)
+    @left = left
     @data = data
-    @right_child = right_child
+    @right = right
   end
 end
-
-module Comparable
-  def compare_nodes(a, b)
-    a.data = b.data
-  end
-end
-
-# Build a Tree class which accepts an array when initialized.
-# The Tree class should have a root attribute which uses the return value of
-# build_tree which you’ll write next.
-
-# Write a #build_tree method which takes an array of data
-# (e.g. [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]) and turns it into a
-# balanced binary tree full of Node objects appropriately placed
-# (don’t forget to sort and remove duplicates!).
-# The #build_tree method should return the level-0 root node.
 
 class Tree
+  attr_reader :root
+
   def initialize(array)
     @root = build_tree(array)
   end
@@ -34,19 +22,27 @@ class Tree
   end
 
   def build_tree(array)
-    mid_idx = array.length/2 - 1
+    return Node.new(nil, array[0], nil) if array.length < 2
+
+    mid_idx = array.length/2
     mid = array[mid_idx]
-    left_half = array[0..(mid_idx - 1)]
-    right_half = array[(mid_idx+1)..-1]
-    p left_half
-    p right_half
-
+    left_half = (array[0..(mid_idx - 1)])
+    right_half = (array[(mid_idx+1)..-1])
+    left_child = build_tree(left_half)
+    right_child = build_tree(right_half)
+    return Node.new(left_child, mid, right_child)
   end
-
 end
 
-simple_array = [1, 2, 3, 4]
+extr_simple_arr = [8]
+simple_array = [1, 2, 3, 5, 7]
 data_arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
+clean_data = data_arr.sort.uniq
 
 
-my_tree = Tree.new(simple_array)
+my_simple_tree = Tree.new(simple_array)
+my_complicated_tree = Tree.new(clean_data)
+
+puts my_simple_tree.pretty_print
+puts my_complicated_tree.pretty_print
+
