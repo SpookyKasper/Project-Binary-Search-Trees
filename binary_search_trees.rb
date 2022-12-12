@@ -1,10 +1,11 @@
 class Node
-  attr_accessor :left, :data, :right
+  attr_accessor :left, :data, :right, :is_leaf
 
   def initialize(data, left=nil, right=nil)
     @data = data
     @left = left
     @right = right
+    @is_leaf = @left.nil? && @right.nil?
   end
 end
 
@@ -32,6 +33,9 @@ class Tree
     left_child = build_tree(left)
     right_child = build_tree(right)
     return Node.new(root, left_child, right_child)
+  end
+
+  def find_leaf_for(value, root=@root)
   end
 
   def insert(value, node=@root)
@@ -111,7 +115,6 @@ my_simple_tree.pretty_print
 my_simple_tree.insert(8)
 my_simple_tree.pretty_print
 
-my_simple_tree.pretty_print
 
 # my_simple_tree.delete(2)
-# my_simple_tree.pretty_print
+my_simple_tree.pretty_print
