@@ -35,6 +35,7 @@ class Tree
   end
 
   def insert(value, node=@root)
+    return if value == node.data
     if value < node.data
       node.left.nil? ? (node.left = Node.new(value) and return ) : left_sub_tree = node.left
       insert(value, left_sub_tree)
@@ -44,24 +45,47 @@ class Tree
     end
   end
 
-  # Pseudo code for delete method
-  # start with deleting leafs
-  # Given a value
-  # Look for that value in the tree as following
-  # start at the root, if the value is smaller than the root.data
-    # recursively call the delete method on the left sub tree
-    # else recursively call delete on the right sub tree
-  # Base case, if next.left or next.right == the value
-  # next.left or next.right gets nil instead
+  # Pseudo code for deleting single child tree
+  # Given a value, look for that value in the tree as following
+  # start at the root
+    # if the root.data == nil return nil
+    # if the root left child == value, 3 possibilities
+      # the left child as no child
+        # then the root left child becomes nil instead
+      # the left child as one child
+        # then the root left child becomes that child instead
+      # the left child has 2 child
+        # then make an array out of the left child node, remove the left child and build a tree
+        # the root left child becomes that tree
+    # if the root right child == value, same as above but with right
+    # if the value is smaller than the root.data
+    # root becomes the root left child
+    # otherwise root becomes the root right child
+
 
   def delete(value, node=@root)
-    # if node.left.data == value || node.right.data == value
-    #   node.left == value ? node.left = nil : node.right = nil
-    #   return
-    # end
+    return nil if root.nil?
+    if root.left == value
+      if root.left.left.nil? && root.left.right.nil? # left child has no child
+        root.left = nil
+        return
+      end
+    end
+
+
     if value < node.data
       p 'goes left'
-      node.left.data == value ? (node.left = nil and return) : delete(value, node.left)
+      if node.left.data == value
+        if node.left.left.nil? && node.left.right.nil?
+          node.left = nil
+          return
+        else
+          node.left = build_tree(node.left)
+          return
+        end
+      else
+        delete(value, node.left)
+      end
     else
       p 'goes right'
       node.right.data == value ? (node.right = nil and return) : delete(value, node.right)
@@ -87,5 +111,7 @@ my_simple_tree.pretty_print
 my_simple_tree.insert(8)
 my_simple_tree.pretty_print
 
-my_simple_tree.delete(3)
 my_simple_tree.pretty_print
+
+# my_simple_tree.delete(2)
+# my_simple_tree.pretty_print
