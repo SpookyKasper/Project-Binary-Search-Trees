@@ -36,20 +36,25 @@ class Tree
 
   # algo insert:
   # given a value
-  # navigate the tree going right if the value is bigger than the current node data
-  # and left if the value is smaller until there's no where to go
+  # if the value is smaller than the root
+  # recursively insert it in the left subtree
+  # if it is bigger than the root
+  # recursively insert it in the right subtree
 
 
-  def insert(value)
-    current_node = @root
-    until current_node.right.nil? || current_node.left.nil?
-      if current_node.data > value
-        current_node = current_node.left
-      else
-        current_node = current_node.right
-      end
+
+  def insert(value, node=@root)
+    if node.right.nil? && node.left.nil?
+      value < node.data ? node.left = Node.new(value) : node.right = Node.new(value)
+      return
     end
-    current_node.data > value ? current_node.left = Node.new(value) : current_node.right = Node.new(value)
+    if value < node.data
+      node.left.nil? ? (node.left = Node.new(value) and return ) : left_sub_tree = node.left
+      insert(value, left_sub_tree)
+    else
+      node.right.nil? ? (node.right = Node.new(value) and return) : right_sub_tree = node.right
+      insert(value, right_sub_tree)
+    end
   end
 end
 
@@ -65,5 +70,12 @@ my_complicated_tree = Tree.new(clean_data)
 
 my_complicated_tree.pretty_print
 my_complicated_tree.insert(24)
+my_complicated_tree.insert(78)
+my_complicated_tree.insert(350)
+my_complicated_tree.insert(10)
 my_complicated_tree.pretty_print
 
+my_simple_tree.pretty_print
+my_simple_tree.insert(8)
+my_simple_tree.insert(9)
+my_simple_tree.pretty_print
