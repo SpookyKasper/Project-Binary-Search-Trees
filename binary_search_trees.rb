@@ -44,10 +44,6 @@ class Tree
 
 
   def insert(value, node=@root)
-    if node.right.nil? && node.left.nil?
-      value < node.data ? node.left = Node.new(value) : node.right = Node.new(value)
-      return
-    end
     if value < node.data
       node.left.nil? ? (node.left = Node.new(value) and return ) : left_sub_tree = node.left
       insert(value, left_sub_tree)
