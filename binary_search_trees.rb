@@ -35,9 +35,6 @@ class Tree
     return Node.new(root, left_child, right_child)
   end
 
-  def find_leaf_for(value, root=@root)
-  end
-
   def insert(value, node=@root)
     return if value == node.data
     if value < node.data
@@ -49,22 +46,24 @@ class Tree
     end
   end
 
-  # Pseudo code for deleting single child tree
-  # Given a value, look for that value in the tree as following
-  # start at the root
-    # if the root.data == nil return nil
-    # if the root left child == value, 3 possibilities
-      # the left child as no child
-        # then the root left child becomes nil instead
-      # the left child as one child
-        # then the root left child becomes that child instead
-      # the left child has 2 child
-        # then make an array out of the left child node, remove the left child and build a tree
-        # the root left child becomes that tree
-    # if the root right child == value, same as above but with right
-    # if the value is smaller than the root.data
-    # root becomes the root left child
-    # otherwise root becomes the root right child
+  def recursive_find(value, root=@root)
+    return root if root.data == value
+    value < root.data ? recursive_find(value, root.left) : recursive_find(value, root.right)
+  end
+
+
+  def find(value)
+    current_node = @root
+    until current_node.data == value || current_node.is_leaf
+      if value < current_node.data
+        current_node = current_node.left
+      else
+        current_node = current_node.right
+      end
+    end
+    current_node.data == value ? current_node : nil
+  end
+
   def find_next_bigger(value)
     return nil if find(value).right.nil?
     current_node = find(value).right
@@ -74,38 +73,18 @@ class Tree
     current_node
   end
 
-  def find(value)
-    current_node = @root
-    until current_node.data == value || current_node.is_leaf
-      if value < current_node.data
-        p 'goes left'
-        current_node = current_node.left
-      else
-        p 'goes right'
-        current_node = current_node.right
-      end
-    end
-    current_node.data == value ? current_node : nil
-  end
-6
+  # Algo for delete method
+  # Given a value look for that value in the Tree
+  # If the value does not exit return nil
+  # Otherwise scan the Tree until the right child root or left child root of a node is the value
+  # Then there's 3 possibilities (or 6)
+    # If the right child root data is equal to the value
+      # and the right child root is a leaf, then it becomes nil
+      # Same for the left child
+
+
+
   def delete(value, node=@root)
-    if value < node.data
-      p 'goes left'
-      if node.left.data == value
-        if node.left.left.nil? && node.left.right.nil?
-          node.left = nil
-          return
-        else
-          node.left = build_tree(node.left)
-          return
-        end
-      else
-        delete(value, node.left)
-      end
-    else
-      p 'goes right'
-      node.right.data == value ? (node.right = nil and return) : delete(value, node.right)
-    end
   end
 end
 
@@ -120,19 +99,8 @@ my_complicated_tree = Tree.new(clean_data)
 
 
 # my_complicated_tree.pretty_print
-# my_complicated_tree.insert(24)
-# my_complicated_tree.pretty_print
-
-my_simple_tree.pretty_print
-my_simple_tree.insert(8)
-my_simple_tree.pretty_print
-
-
-# my_simple_tree.delete(2)
-my_simple_tree.pretty_print
-
-p my_simple_tree.find(6)
+# my_complicated_tree.insert(68)
 my_complicated_tree.pretty_print
-p my_complicated_tree.find_next_bigger(7)
-p my_complicated_tree.find_next_bigger(67).data
-p my_complicated_tree.find_next_bigger(8).data
+p my_complicated_tree.find(23)
+p my_complicated_tree.recursive_find(23)
+
