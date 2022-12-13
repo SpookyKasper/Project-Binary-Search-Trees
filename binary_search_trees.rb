@@ -9,6 +9,18 @@ class Node
     @left = left
     @right = right
     @is_leaf = @left.nil? && @right.nil?
+    @children = count_chidren
+  end
+
+  def count_chidren
+    count = 0
+    unless @left.nil?
+      count += 1
+    end
+    unless @right.nil?
+      count += 1
+    end
+    count
   end
 end
 
@@ -117,13 +129,25 @@ class Tree
     return nil if node.left.is_leaf && node.right.is_leaf
     elsif value < node.data
       if value == node.left.data
-        if node.left.is_leaf then node.left = nil end
+        num_children = node.left.count_chidren
+        case num_children
+        when 0
+          node.left = nil
+        when 1
+          node.left = node.left.left || node.left.right
+        end
       else
         node = delete(value, node.left)
       end
     else
       if value == node.right.data
-        if node.right.is_leaf then node.right = nil end
+        num_children = node.right.count_chidren
+        case num_children
+        when 0
+          node.right = nil
+        when 1
+          node.right = node.right.left || node.right.right
+        end
       else
         delete(value, node.right)
       end
@@ -149,7 +173,6 @@ p my_complicated_tree.find(23)
 p my_complicated_tree.recursive_find(23)
 puts my_complicated_tree.recursive_find(67)
 
-p my_complicated_tree.delete(5)
-p my_complicated_tree.delete(1)
+p my_complicated_tree.delete(67)
 p my_complicated_tree.pretty_print
 
