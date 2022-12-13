@@ -67,23 +67,10 @@ class Tree
     end
   end
 
-  def recursive_find(value, root=@root)
+  def find(value, root=@root)
     return if root.nil?
     return root if root.data == value
-    value < root.data ? recursive_find(value, root.left) : recursive_find(value, root.right)
-  end
-
-
-  def find(value)
-    current_node = @root
-    until current_node.data == value || current_node.is_leaf
-      if value < current_node.data
-        current_node = current_node.left
-      else
-        current_node = current_node.right
-      end
-    end
-    current_node.data == value ? current_node : nil
+    value < root.data ? find(value, root.left) : find(value, root.right)
   end
 
   def find_next_bigger(value)
@@ -92,7 +79,7 @@ class Tree
     until current_node.left.nil?
       current_node = current_node.left
     end
-    current_node
+    current_node.data
   end
 
   # Algo for delete method
@@ -121,7 +108,16 @@ class Tree
     # If he has 2 children, find the next bigger and it becomes the child
 
 
-  def deleting_nodes(node)
+  def replace_node(node)
+    num_children = node.count_chidren
+    case num_children
+    when 0
+      nil
+    when 1
+      node.left || node.right
+    when 2
+      Node.new(find_next_bigger(node.data), node.left, node.right)
+    end
   end
 
   def delete(value, node=@root)
@@ -129,25 +125,13 @@ class Tree
     return nil if node.left.is_leaf && node.right.is_leaf
     elsif value < node.data
       if value == node.left.data
-        num_children = node.left.count_chidren
-        case num_children
-        when 0
-          node.left = nil
-        when 1
-          node.left = node.left.left || node.left.right
-        end
+        node.left = replace_node(node.left)
       else
-        node = delete(value, node.left)
+        delete(value, node.left)
       end
     else
       if value == node.right.data
-        num_children = node.right.count_chidren
-        case num_children
-        when 0
-          node.right = nil
-        when 1
-          node.right = node.right.left || node.right.right
-        end
+        node.right = replace_node(node.right)
       else
         delete(value, node.right)
       end
@@ -166,13 +150,7 @@ my_simple_tree = Tree.new(simple_array)
 my_complicated_tree = Tree.new(clean_data)
 
 
-# my_complicated_tree.pretty_print
-# my_complicated_tree.insert(68)
-my_complicated_tree.pretty_print
-p my_complicated_tree.find(23)
-p my_complicated_tree.recursive_find(23)
-puts my_complicated_tree.recursive_find(67)
-
+p my_complicated_tree.delete(4)
 p my_complicated_tree.delete(67)
-p my_complicated_tree.pretty_print
+my_complicated_tree.pretty_print
 
