@@ -65,11 +65,13 @@ class Tree
     # if the value is smaller than the root.data
     # root becomes the root left child
     # otherwise root becomes the root right child
-  def find_next_smallest(value)
-    current_node = @root
-    until current_node.is_leaf
-      current_node = current_node.right
+  def find_next_bigger(value)
+    return nil if find(value).right.nil?
+    current_node = find(value).right
+    until current_node.left.nil?
+      current_node = current_node.left
     end
+    current_node
   end
 
   def find(value)
@@ -85,7 +87,7 @@ class Tree
     end
     current_node.data == value ? current_node : nil
   end
-
+6
   def delete(value, node=@root)
     if value < node.data
       p 'goes left'
@@ -130,3 +132,7 @@ my_simple_tree.pretty_print
 my_simple_tree.pretty_print
 
 p my_simple_tree.find(6)
+my_complicated_tree.pretty_print
+p my_complicated_tree.find_next_bigger(7)
+p my_complicated_tree.find_next_bigger(67).data
+p my_complicated_tree.find_next_bigger(8).data
