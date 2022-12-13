@@ -1,4 +1,7 @@
 class Node
+
+  include Comparable
+
   attr_accessor :left, :data, :right, :is_leaf
 
   def initialize(data, left=nil, right=nil)
@@ -6,6 +9,12 @@ class Node
     @left = left
     @right = right
     @is_leaf = @left.nil? && @right.nil?
+  end
+end
+
+module Comparable
+  def compare(node1, node2)
+    node1.data == node2.data
   end
 end
 
@@ -47,6 +56,7 @@ class Tree
   end
 
   def recursive_find(value, root=@root)
+    return if root.nil?
     return root if root.data == value
     value < root.data ? recursive_find(value, root.left) : recursive_find(value, root.right)
   end
@@ -74,17 +84,51 @@ class Tree
   end
 
   # Algo for delete method
-  # Given a value look for that value in the Tree
-  # If the value does not exit return nil
-  # Otherwise scan the Tree until the right child root or left child root of a node is the value
-  # Then there's 3 possibilities (or 6)
-    # If the right child root data is equal to the value
-      # and the right child root is a leaf, then it becomes nil
-      # Same for the left child
+  # Given a value look for that value in the Tree as following:
+  # Start at the root:
+  # compare the root.data with the value
+    # If the root.data equals the value, we found the node we want to delete go to delete step
+    # Otherwise
+      # if the value is smaller than the root.data
+        # check if the left child data is equal to the value
+          # if it is go to the delete step
+          # otherwise recursively call delete on the left child
+      # if the value is bigger than the root.data
+        # check if the right child data is equal to the value
+          # if it is got to the delete step
+          # otherwise recursively call delete on the right child
+  # If we reach the end of the tree without finding the value return nil
+  # If we found the value is the left or right child root.data
+  # Deleting step:
+  # 3 possibilities:
+    # If the child were the data is equal to our value is a leaf
+      # then the child becomes nil instead, easy
+    # If the child is not a leaf, check how many children he has
+    # If he has one children, just skip the child in the tree
+      # which means the child becomes the child child
+    # If he has 2 children, find the next bigger and it becomes the child
 
 
+  def deleting_nodes(node)
+  end
 
   def delete(value, node=@root)
+    if value == node.data # delete process
+    return nil if node.left.is_leaf && node.right.is_leaf
+    elsif value < node.data
+      if value == node.left.data
+        if node.left.is_leaf then node.left = nil end
+      else
+        node = delete(value, node.left)
+      end
+    else
+      if value == node.right.data
+        if node.right.is_leaf then node.right = nil end
+      else
+        delete(value, node.right)
+      end
+    end
+    # deleting step
   end
 end
 
@@ -103,4 +147,9 @@ my_complicated_tree = Tree.new(clean_data)
 my_complicated_tree.pretty_print
 p my_complicated_tree.find(23)
 p my_complicated_tree.recursive_find(23)
+puts my_complicated_tree.recursive_find(67)
+
+p my_complicated_tree.delete(5)
+p my_complicated_tree.delete(1)
+p my_complicated_tree.pretty_print
 
