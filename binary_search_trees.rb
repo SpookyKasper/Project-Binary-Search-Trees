@@ -94,7 +94,6 @@ class Tree
     # we start at the right children, then we go as far left as we can
     # when we reach the far left we return the data and that node gets the result of calling delete on it
 
-
   def delete(value, node=@root, mama=@root)
     return if node.nil?
     puts "This is the current node #{node.data}, this is the mama #{mama.data}"
@@ -104,10 +103,12 @@ class Tree
       puts "this is the number of children of the node we are deleting #{num_children}"
       case num_children
       when 0
-        to_return = nil
-        node = nil
-        puts "returning nil after 0 children"
-        return to_return
+        if mama.data < node.data
+          mama.right = nil
+        else
+          mama.left = nil
+        end
+        return
       when 1
         to_return = node.right || node.left
         node = node.right || node.left
@@ -156,5 +157,7 @@ my_complicated_tree.delete(7)
 my_complicated_tree.pretty_print
 puts 'next delete operation'
 my_complicated_tree.delete(234)
+my_complicated_tree.pretty_print
+my_complicated_tree.delete(10)
 my_complicated_tree.pretty_print
 
