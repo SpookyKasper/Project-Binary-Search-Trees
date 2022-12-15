@@ -103,35 +103,29 @@ class Tree
       puts "this is the number of children of the node we are deleting #{num_children}"
       case num_children
       when 0
-        if mama.data < node.data
-          mama.right = nil
-        else
-          mama.left = nil
-        end
+        mama.data < node.data ? mama.right = nil : mama.left = nil
         return
       when 1
-        to_return = node.right || node.left
-        node = node.right || node.left
-        return to_return
+        node.left.nil? ? mama.right = node.right : mama.left = node.left
+        return
       when 2
         current_node = node.right
+        mama = current_node
         until current_node.left == nil
-          papa = current_node
-          puts "this is the papa of what we are gonna delete to replace the main delete #{papa.data}"
+          mama = current_node
           current_node = current_node.left
         end
-        to_return = current_node
-        puts "This is right smallest value #{to_return.data}"
-        if papa.nil?
+        puts "This is right smallest value #{current_node.data}"
+        if mama == current_node
           node.data = to_return.data
           node.right = to_return.right
           return
         end
         # puts "this is the papa left before deletin #{papa.left.data}"
-        papa.left = delete(current_node.data, current_node, papa)
-        puts "This is the papa left #{papa.left} after deleting"
-        node.data = to_return.data
-        return to_return
+        mama.left = delete(current_node.data, current_node, mama)
+        puts "This is the papa left #{mama.left} after deleting"
+        node.data = current_node.data
+        return
       end
     end
     value < node.data ? delete(value, node.left, node) : delete(value, node.right, node)
