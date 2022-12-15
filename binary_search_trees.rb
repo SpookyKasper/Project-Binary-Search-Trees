@@ -73,76 +73,74 @@ class Tree
     value < root.data ? find(value, root.left) : find(value, root.right)
   end
 
-  def find_next_bigger(value)
-    return nil if find(value).right.nil?
-    current_node = find(value).right
-    until current_node.left.nil?
-      current_node = current_node.left
-    end
-    current_node.data
-  end
+  # Pseudocode Delete method
+  # given the value of the node we want to delete, let's call that node john_go
+  # search the tree for john_go as following
+  # start at the root of the tree
+  # if the root.data == value, we found john_go we can assign it the result of the the delete_node method and return
+  # if the value is smaller than the root.data
+    # we call delete on the left sub tree
+  # if the value is bigger than the root.data
+    # we call delete on the right sub tree
 
-  # Algo for delete method
-  # Given a value look for that value in the Tree as following:
-  # Start at the root:
-  # compare the root.data with the value
-    # If the root.data equals the value, we found the node we want to delete go to delete step
-    # Otherwise
-      # if the value is smaller than the root.data
-        # check if the left child data is equal to the value
-          # if it is go to the delete step
-          # otherwise recursively call delete on the left child
-      # if the value is bigger than the root.data
-        # check if the right child data is equal to the value
-          # if it is got to the delete step
-          # otherwise recursively call delete on the right child
-  # If we reach the end of the tree without finding the value return nil
-  # If we found the value is the left or right child root.data
-  # Deleting step:
-  # 3 possibilities:
-    # If the child were the data is equal to our value is a leaf
-      # then the child becomes nil instead, easy
-    # If the child is not a leaf, check how many children he has
-    # If he has one children, just skip the child in the tree
-      # which means the child becomes the child child
-    # If he has 2 children, find the next bigger and it becomes the child
+  # pseudocode delete_node(node)
+  # given a node we want to delete, we want to assign it a value depending on its descendence, we have 3 possibilities
+    # if that node is a leaf the whe return nil
+    # if that node has only a right child he becomes that right child instead
+    # if that node has 2 childs we want to call find_next_and_replace on it
+
+  # pseudocode find_next_nad replace
+    # given a node with 2 children, we want to assign it the smallest value to it's right as following:
+    # we start at the right children, then we go as far left as we can
+    # when we reach the far left we return the data and that node gets the result of calling delete on it
 
 
-  def replace_node(node)
-    num_children = node.count_chidren
-    case num_children
-    when 0
-      nil
-    when 1
-      node.left || node.right
-    when 2
-      Node.new(find_next_bigger(node.data), node.left, node.right)
-    end
-  end
-
-  def delete(value, node=@root)
-    if value == node.data # delete process
-    return nil if node.left.is_leaf && node.right.is_leaf
-    elsif value < node.data
-      if value == node.left.data
-        node.left = replace_node(node.left)
-      else
-        delete(value, node.left)
-      end
-    else
-      if value == node.right.data
-        node.right = replace_node(node.right)
-      else
-        delete(value, node.right)
+  def delete(value, node=@root, mama=@root)
+    return if node.nil?
+    puts "This is the current node #{node.data}, this is the mama #{mama.data}"
+    if node.data == value
+      puts "THIS IS what we are delting #{node.data}"
+      num_children = node.count_chidren
+      puts "this is the number of children of the node we are deleting #{num_children}"
+      case num_children
+      when 0
+        to_return = nil
+        node = nil
+        puts "returning nil after 0 children"
+        return to_return
+      when 1
+        to_return = node.right || node.left
+        node = node.right || node.left
+        return to_return
+      when 2
+        current_node = node.right
+        until current_node.left == nil
+          papa = current_node
+          puts "this is the papa of what we are gonna delete to replace the main delete #{papa.data}"
+          current_node = current_node.left
+        end
+        to_return = current_node
+        puts "This is right smallest value #{to_return.data}"
+        if papa.nil?
+          node.data = to_return.data
+          node.right = to_return.right
+          return
+        end
+        # puts "this is the papa left before deletin #{papa.left.data}"
+        papa.left = delete(current_node.data, current_node, papa)
+        puts "This is the papa left #{papa.left} after deleting"
+        node.data = to_return.data
+        return to_return
       end
     end
-    # deleting step
+    value < node.data ? delete(value, node.left, node) : delete(value, node.right, node)
   end
+
 end
 
 extr_simple_arr = [8]
 simple_array = [1, 2, 3, 4, 5, 6, 7]
-data_arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
+data_arr = [1, 7, 4, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 12338, 12, 234, 29, 98]
 clean_data = data_arr.sort.uniq
 
 
@@ -150,7 +148,13 @@ my_simple_tree = Tree.new(simple_array)
 my_complicated_tree = Tree.new(clean_data)
 
 
-p my_complicated_tree.delete(4)
-p my_complicated_tree.delete(67)
+my_complicated_tree.pretty_print
+my_complicated_tree.delete(5)
+my_complicated_tree.pretty_print
+puts "next delete operation"
+my_complicated_tree.delete(7)
+my_complicated_tree.pretty_print
+puts 'next delete operation'
+my_complicated_tree.delete(234)
 my_complicated_tree.pretty_print
 
