@@ -14,7 +14,7 @@ class Node
   def count_chidren
     count = 0
     unless @left.nil? then count += 1 end
-    unless right.nil? then count += 1 end
+    unless @right.nil? then count += 1 end
     count
   end
 end
@@ -64,30 +64,57 @@ class Tree
   def find(value, root=@root)
     return if root.nil?
     return root if root.data == value
+
     value < root.data ? find(value, root.left) : find(value, root.right)
+  end
+
+  def find_right_smallest(node, mama)
+    mama = node
+    current_node = node.right
+    until node.left.nil?
+      mama = current_node
+      current_node = current_node.left
+    end
+    current_node
+  end
+
+  def delete_node(node, mama)
+    case node.count_chidren
+    when 0
+      mama.data < node.data ? mama.right = nil : mama.left = nil
+    when 1
+      node.left.nil? ? mama.righ = node.right : mama.left = node.left
+    when 2
+      right_smallest = find_right_smallest(node)
+
+
+    end
+    result
   end
 
   def delete(value, node=@root, mama=@root)
     return if node.nil?
+
+    puts "this is the value we want to delete #{value}"
+    puts "this is the ndoe we are at #{node.data}"
+    puts "this is the mama #{mama.data}"
+
     if node.data == value
-      num_children = node.count_chidren
-      case num_children
+      case node.count_chidren
       when 0
         mama.data < node.data ? mama.right = nil : mama.left = nil
-        return
       when 1
-        node.left.nil? ? mama.right = node.right : mama.left = node.left
-        return
+        mama.data < node.data ? mama.right = node.right || node.left : mama.left = node.right || node.left
       when 2
         current_node = node.right
         mama = current_node
-        until current_node.left == nil
+        until current_node.left.nil?
           mama = current_node
           current_node = current_node.left
         end
         if mama == current_node
-          node.data = to_return.data
-          node.right = to_return.right
+          node.data = current_node.data
+          node.right = current_node.right
           return
         end
         mama.left = delete(current_node.data, current_node, mama)
@@ -106,11 +133,15 @@ clean_data = data_arr.sort.uniq
 my_simple_tree = Tree.new(simple_array)
 my_complicated_tree = Tree.new(clean_data)
 
-my_complicated_tree.insert(24)
-my_complicated_tree.insert(13)
+# my_complicated_tree.insert(24)
+# my_complicated_tree.insert(13)
+# my_complicated_tree.pretty_print
 my_complicated_tree.pretty_print
-# my_complicated_tree.pretty_print
-# my_complicated_tree.delete(245)
-# my_complicated_tree.pretty_print
-# my_complicated_tree.delete(29)
-# my_complicated_tree.pretty_print
+my_complicated_tree.delete(245)
+my_complicated_tree.pretty_print
+my_complicated_tree.delete(11)
+my_complicated_tree.pretty_print
+my_complicated_tree.delete(23)
+my_complicated_tree.pretty_print
+my_complicated_tree.delete(7)
+my_complicated_tree.pretty_print
