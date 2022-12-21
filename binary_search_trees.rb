@@ -42,6 +42,7 @@ class Tree
     return nil if array.empty?
     return Node.new(array[0]) if array.length < 2
 
+    array = array.uniq.sort
     root_index = array.length/2
     root = array[root_index]
     left = array[0..root_index-1]
@@ -68,28 +69,12 @@ class Tree
     value < root.data ? find(value, root.left) : find(value, root.right)
   end
 
-  def find_right_smallest(node, mama)
-    mama = node
-    current_node = node.right
-    until node.left.nil?
-      mama = current_node
-      current_node = current_node.left
+  def find_next_and_delete(node)
+    current_node = node
+    until current_node.left.nil?
+      current_node = node.left
     end
     current_node
-  end
-
-  def delete_node(node, mama)
-    case node.count_chidren
-    when 0
-      mama.data < node.data ? mama.right = nil : mama.left = nil
-    when 1
-      node.left.nil? ? mama.righ = node.right : mama.left = node.left
-    when 2
-      right_smallest = find_right_smallest(node)
-
-
-    end
-    result
   end
 
   def delete(value, node=@root, mama=@root)
@@ -106,42 +91,62 @@ class Tree
       when 1
         mama.data < node.data ? mama.right = node.right || node.left : mama.left = node.right || node.left
       when 2
+        mama = node
         current_node = node.right
-        mama = current_node
-        until current_node.left.nil?
-          mama = current_node
-          current_node = current_node.left
-        end
-        if mama == current_node
-          node.data = current_node.data
-          node.right = current_node.right
-          return
-        end
-        mama.left = delete(current_node.data, current_node, mama)
-        node.data = current_node.data
+        find_next_and_delete(current_node)
+        # until current_node.left.nil?
+        #   mama = current_node
+        #   current_node = current_node.left
+        # end
+        # if mama == current_node
+        #   node.data = current_node.data
+        #   node.right = current_node.right
+        #   return
+        # end
+        # mama.left = delete(current_node.data, current_node, mama)
+        # node.data = current_node.data
         return
       end
     end
     value < node.data ? delete(value, node.left, node) : delete(value, node.right, node)
   end
+
+    # pseudocode delete
+  # given a value we want to delete
+  # start at the root of the tree
+  # if the value is equal to the root data
+    # assign to the root the returned node off calling delete_node on it
+  # if the value is smaller than the root data
+    # assign to the left sub tree the node returned by calling the delete method on it
+  # if it bigger assign the to the right subtree the node returned by calling the delete method on it
+
+  # pseudocode delete_node
+  # given a node wa are at that we want to delete and return a value for the parrent
+  # if our node as no children return nil
+
+  def new_delete(value, root = @root)
+    if value == root.data
+      root = new_delete_node(root)
+      return
+    end
+
+    if value < root.data
+      root.left = new_delete(root.left)
+    end
+
+    if value > root.data
+      root.right = new_delete(root.right)
+    end
+  end
 end
 
 simple_array = [1, 2, 3, 4, 5, 6, 7]
 data_arr = [1, 7, 4, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 12338, 12, 234, 29, 98, 200, 245, 11]
-clean_data = data_arr.sort.uniq
 
 my_simple_tree = Tree.new(simple_array)
-my_complicated_tree = Tree.new(clean_data)
+my_complicated_tree = Tree.new(data_arr)
 
-# my_complicated_tree.insert(24)
-# my_complicated_tree.insert(13)
-# my_complicated_tree.pretty_print
+
+my_simple_tree.pretty_print
 my_complicated_tree.pretty_print
-my_complicated_tree.delete(245)
-my_complicated_tree.pretty_print
-my_complicated_tree.delete(11)
-my_complicated_tree.pretty_print
-my_complicated_tree.delete(23)
-my_complicated_tree.pretty_print
-my_complicated_tree.delete(7)
-my_complicated_tree.pretty_print
+
