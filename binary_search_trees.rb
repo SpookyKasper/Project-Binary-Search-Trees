@@ -124,20 +124,36 @@ class Tree
   # given a node wa are at that we want to delete and return a value for the parrent
   # if our node as no children return nil
 
-  def new_delete(value, root = @root)
+  def new_delete(value, root = @root, mama = @root)
+    p "This is the value #{value}"
+    p "This is the root data #{root.data}"
     if value == root.data
-      root = new_delete_node(root)
-      return
+      p 'start the deleting process'
+      if root.is_leaf
+        root.data < mama.data ? mama.left = nil : mama.right = nil
+        puts "this is the mama #{mama.data}"
+        puts "this is the sun #{root.data}"
+        puts "about to return mama"
+        return mama
+      end
     end
 
     if value < root.data
-      root.left = new_delete(root.left)
+      puts "#{mama.data} is gonna become calling new_delete on it "
+      mama = new_delete(value, root.left, root)
+      return
     end
 
     if value > root.data
-      root.right = new_delete(root.right)
+      puts "#{root.right.data} is gonna become calling new_delete on it "
+      mama = new_delete(value, root.right, root)
+      return
     end
   end
+
+  # def new_delete_node(node)
+  #   return nil if node.is_leaf
+  # end
 end
 
 simple_array = [1, 2, 3, 4, 5, 6, 7]
@@ -148,5 +164,12 @@ my_complicated_tree = Tree.new(data_arr)
 
 
 my_simple_tree.pretty_print
-my_complicated_tree.pretty_print
+# my_complicated_tree.pretty_print
+
+# my_simple_tree.new_delete(7)
+my_simple_tree.pretty_print
+# my_simple_tree.new_delete(3)
+my_simple_tree.pretty_print
+my_simple_tree.new_delete(2)
+my_simple_tree.pretty_print
 
