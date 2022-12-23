@@ -129,11 +129,21 @@ class Tree
     p "This is the root data #{root.data}"
     if value == root.data
       p 'start the deleting process'
-      if root.is_leaf
+      case root.count_chidren
+      when 0
         root.data < mama.data ? mama.left = nil : mama.right = nil
         puts "this is the mama #{mama.data}"
         puts "this is the sun #{root.data}"
-        puts "about to return mama"
+        return mama
+      when 1
+        puts "#{mama.data} as only one child"
+        puts "this is the mama #{mama.data}"
+        puts "this is the son #{root.data}"
+        if root.data < mama.data
+          mama.left = root.left || root.right
+        else
+          mama.right = root.left || root.right
+        end
         return mama
       end
     end
@@ -145,7 +155,7 @@ class Tree
     end
 
     if value > root.data
-      puts "#{root.right.data} is gonna become calling new_delete on it "
+      puts "#{mama.data} is gonna become calling new_delete on it "
       mama = new_delete(value, root.right, root)
       return
     end
@@ -163,6 +173,7 @@ my_simple_tree = Tree.new(simple_array)
 my_complicated_tree = Tree.new(data_arr)
 
 
+my_simple_tree.insert(8)
 my_simple_tree.pretty_print
 # my_complicated_tree.pretty_print
 
@@ -170,6 +181,6 @@ my_simple_tree.pretty_print
 my_simple_tree.pretty_print
 # my_simple_tree.new_delete(3)
 my_simple_tree.pretty_print
-my_simple_tree.new_delete(2)
+my_simple_tree.new_delete(7)
 my_simple_tree.pretty_print
 
