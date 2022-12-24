@@ -125,20 +125,14 @@ class Tree
   # if our node as no children return nil
 
   def new_delete(value, root = @root, mama = @root)
-    p "This is the value #{value}"
-    # p "This is the root data #{root.data}"
-    p "This is the mama data #{mama.data}"
     if value == root.data
-      p 'start the deleting process'
       mama = new_delete_node(root, mama)
       return mama
     end
 
     if value < root.data
-      # puts "#{mama.data} is gonna become calling new_delete on it "
       mama = new_delete(value, root.left, root)
     elsif value > root.data
-      # puts "#{mama.data} is gonna become calling new_delete on it "
       mama = new_delete(value, root.right, root)
     end
   end
@@ -156,40 +150,15 @@ class Tree
       mama
     when 2
       puts "#{root.data} as 2 childs"
-      # pseudocode for 2 children
-      # recursively find the smallest value to the right and delete it
-      puts "this is the mama just before calling the find next #{mama.data}"
-      mama.right = find_next_and_del(root.right, root)
-      puts "this is the mama after calling the find next #{mama.data}"
+      current_node = root.right
+      until current_node.left.nil?
+        papa = current_node
+        current_node = current_node.left
+      end
+      data = current_node.data
+      new_delete_node(current_node, papa)
+      root.data = data
       mama
-    end
-  end
-
-  # pseudocode for find_nex_and_del
-  # given a node we want to delete that has 2 childs,
-  # find the next value and replace it by the result of calling find_next_and delete on it
-  # base case
-  # if the next value is a leaf, his mama gets left nil
-  # otherwise is mama gets left next value's right
-
-  def find_next_and_del(root, mama)
-    puts "this is the mama in the find next #{mama.data}"
-    puts "this is the root in the find next #{root.data}"
-    until root.left.nil?
-      root = root.left
-    end
-    puts "this is the root aftet search #{root.data}"
-    puts "this is the mamam after search #{mama.data}"
-    if root.right.nil?
-      puts "roots #{root.data} is a leaf"
-      mama.right = nil
-      return
-    else
-      puts "root #{root.data} has a child"
-      puts "this is the mama before the change #{mama.data}"
-      mama.data = root.data
-      mama.right = root.right
-      return mama
     end
   end
 end
@@ -201,17 +170,11 @@ my_simple_tree = Tree.new(simple_array)
 my_complicated_tree = Tree.new(data_arr)
 
 
-my_simple_tree.insert(8)
-my_simple_tree.insert(3.5)
-my_simple_tree.pretty_print
-# my_complicated_tree.pretty_print
+my_complicated_tree.pretty_print
+my_complicated_tree.new_delete(4)
+my_complicated_tree.pretty_print
 
-# my_simple_tree.new_delete(7)
-my_simple_tree.pretty_print
-# my_simple_tree.new_delete(3)
-my_simple_tree.pretty_print
-my_simple_tree.new_delete(3)
-my_simple_tree.pretty_print
-my_simple_tree.new_delete(6)
-my_simple_tree.pretty_print
-
+my_complicated_tree.new_delete(29)
+my_complicated_tree.pretty_print
+my_complicated_tree.new_delete(245)
+my_complicated_tree.pretty_print
