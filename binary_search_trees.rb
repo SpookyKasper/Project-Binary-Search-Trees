@@ -113,7 +113,7 @@ class Tree
 
     # pseudocode delete
   # given a value we want to delete
-  # start at the root of the tree
+  # current_node at the root of the tree
   # if the value is equal to the root data
     # assign to the root the returned node off calling delete_node on it
   # if the value is smaller than the root data
@@ -126,44 +126,72 @@ class Tree
 
   def new_delete(value, root = @root, mama = @root)
     p "This is the value #{value}"
-    p "This is the root data #{root.data}"
+    # p "This is the root data #{root.data}"
+    p "This is the mama data #{mama.data}"
     if value == root.data
       p 'start the deleting process'
-      case root.count_chidren
-      when 0
-        root.data < mama.data ? mama.left = nil : mama.right = nil
-        puts "this is the mama #{mama.data}"
-        puts "this is the sun #{root.data}"
-        return mama
-      when 1
-        puts "#{mama.data} as only one child"
-        puts "this is the mama #{mama.data}"
-        puts "this is the son #{root.data}"
-        if root.data < mama.data
-          mama.left = root.left || root.right
-        else
-          mama.right = root.left || root.right
-        end
-        return mama
-      end
+      mama = new_delete_node(root, mama)
+      return mama
     end
 
     if value < root.data
-      puts "#{mama.data} is gonna become calling new_delete on it "
+      # puts "#{mama.data} is gonna become calling new_delete on it "
       mama = new_delete(value, root.left, root)
-      return
-    end
-
-    if value > root.data
-      puts "#{mama.data} is gonna become calling new_delete on it "
+    elsif value > root.data
+      # puts "#{mama.data} is gonna become calling new_delete on it "
       mama = new_delete(value, root.right, root)
-      return
     end
   end
 
-  # def new_delete_node(node)
-  #   return nil if node.is_leaf
-  # end
+  def new_delete_node(root, mama)
+    case root.count_chidren
+    when 0
+      puts "#{root.data} as no children"
+      root.data < mama.data ? mama.left = nil : mama.right = nil
+      mama
+    when 1
+      puts "#{root.data} as only one child"
+      child = root.left || root.right
+      root.data < mama.data ? mama.left = child : mama.right = child
+      mama
+    when 2
+      puts "#{root.data} as 2 childs"
+      # pseudocode for 2 children
+      # recursively find the smallest value to the right and delete it
+      puts "this is the mama just before calling the find next #{mama.data}"
+      mama.right = find_next_and_del(root.right, root)
+      puts "this is the mama after calling the find next #{mama.data}"
+      mama
+    end
+  end
+
+  # pseudocode for find_nex_and_del
+  # given a node we want to delete that has 2 childs,
+  # find the next value and replace it by the result of calling find_next_and delete on it
+  # base case
+  # if the next value is a leaf, his mama gets left nil
+  # otherwise is mama gets left next value's right
+
+  def find_next_and_del(root, mama)
+    puts "this is the mama in the find next #{mama.data}"
+    puts "this is the root in the find next #{root.data}"
+    until root.left.nil?
+      root = root.left
+    end
+    puts "this is the root aftet search #{root.data}"
+    puts "this is the mamam after search #{mama.data}"
+    if root.right.nil?
+      puts "roots #{root.data} is a leaf"
+      mama.right = nil
+      return
+    else
+      puts "root #{root.data} has a child"
+      puts "this is the mama before the change #{mama.data}"
+      mama.data = root.data
+      mama.right = root.right
+      return mama
+    end
+  end
 end
 
 simple_array = [1, 2, 3, 4, 5, 6, 7]
@@ -174,6 +202,7 @@ my_complicated_tree = Tree.new(data_arr)
 
 
 my_simple_tree.insert(8)
+my_simple_tree.insert(3.5)
 my_simple_tree.pretty_print
 # my_complicated_tree.pretty_print
 
@@ -181,6 +210,8 @@ my_simple_tree.pretty_print
 my_simple_tree.pretty_print
 # my_simple_tree.new_delete(3)
 my_simple_tree.pretty_print
-my_simple_tree.new_delete(7)
+my_simple_tree.new_delete(3)
+my_simple_tree.pretty_print
+my_simple_tree.new_delete(6)
 my_simple_tree.pretty_print
 
