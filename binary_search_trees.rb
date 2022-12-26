@@ -125,56 +125,51 @@ class Tree
   # if our node as no children return nil
 
   def new_delete(value, root = @root, mama = @root)
+    return if root.nil?
+
     if value == root.data
-      mama = new_delete_node(root, mama)
-      return mama
+      new_delete_node(root, mama)
+      return value
     end
 
     if value < root.data
-      mama = new_delete(value, root.left, root)
+      new_delete(value, root.left, root)
     elsif value > root.data
-      mama = new_delete(value, root.right, root)
+      new_delete(value, root.right, root)
     end
   end
 
   def new_delete_node(root, mama)
     case root.count_chidren
     when 0
-      puts "#{root.data} as no children"
       root.data < mama.data ? mama.left = nil : mama.right = nil
-      mama
     when 1
-      puts "#{root.data} as only one child"
       child = root.left || root.right
       root.data < mama.data ? mama.left = child : mama.right = child
-      mama
     when 2
-      puts "#{root.data} as 2 childs"
+      papa = root
       current_node = root.right
       until current_node.left.nil?
         papa = current_node
         current_node = current_node.left
       end
-      data = current_node.data
+      root.data = current_node.data
       new_delete_node(current_node, papa)
-      root.data = data
-      mama
     end
   end
 end
 
 simple_array = [1, 2, 3, 4, 5, 6, 7]
-data_arr = [1, 7, 4, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 12338, 12, 234, 29, 98, 200, 245, 11]
+data_arr = [1, 7, 4, 24, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 12338, 12, 234, 29, 98, 200, 245, 11]
 
 my_simple_tree = Tree.new(simple_array)
-my_complicated_tree = Tree.new(data_arr)
+my_treee = Tree.new(data_arr)
 
 
-my_complicated_tree.pretty_print
-my_complicated_tree.new_delete(4)
-my_complicated_tree.pretty_print
-
-my_complicated_tree.new_delete(29)
-my_complicated_tree.pretty_print
-my_complicated_tree.new_delete(245)
-my_complicated_tree.pretty_print
+my_treee.pretty_print
+p my_treee.new_delete(56)
+my_treee.pretty_print
+puts my_treee.new_delete(98)
+my_treee.pretty_print
+puts my_treee.new_delete(12)
+my_treee.pretty_print
