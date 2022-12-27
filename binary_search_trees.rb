@@ -69,77 +69,22 @@ class Tree
     value < root.data ? find(value, root.left) : find(value, root.right)
   end
 
-  def find_next_and_delete(node)
-    current_node = node
-    until current_node.left.nil?
-      current_node = node.left
-    end
-    current_node
-  end
-
-  def delete(value, node=@root, mama=@root)
-    return if node.nil?
-
-    puts "this is the value we want to delete #{value}"
-    puts "this is the ndoe we are at #{node.data}"
-    puts "this is the mama #{mama.data}"
-
-    if node.data == value
-      case node.count_chidren
-      when 0
-        mama.data < node.data ? mama.right = nil : mama.left = nil
-      when 1
-        mama.data < node.data ? mama.right = node.right || node.left : mama.left = node.right || node.left
-      when 2
-        mama = node
-        current_node = node.right
-        find_next_and_delete(current_node)
-        # until current_node.left.nil?
-        #   mama = current_node
-        #   current_node = current_node.left
-        # end
-        # if mama == current_node
-        #   node.data = current_node.data
-        #   node.right = current_node.right
-        #   return
-        # end
-        # mama.left = delete(current_node.data, current_node, mama)
-        # node.data = current_node.data
-        return
-      end
-    end
-    value < node.data ? delete(value, node.left, node) : delete(value, node.right, node)
-  end
-
-    # pseudocode delete
-  # given a value we want to delete
-  # current_node at the root of the tree
-  # if the value is equal to the root data
-    # assign to the root the returned node off calling delete_node on it
-  # if the value is smaller than the root data
-    # assign to the left sub tree the node returned by calling the delete method on it
-  # if it bigger assign the to the right subtree the node returned by calling the delete method on it
-
-  # pseudocode delete_node
-  # given a node wa are at that we want to delete and return a value for the parrent
-  # if our node as no children return nil
-
-  def new_delete(value, root = @root, mama = @root)
+  def delete(value, root = @root, mama = @root)
     return if root.nil?
 
     if value == root.data
-      new_delete_node(root, mama)
+      delete_node(root, mama)
       return value
     end
 
     if value < root.data
-      new_delete(value, root.left, root)
+      delete(value, root.left, root)
     elsif value > root.data
-      new_delete(value, root.right, root)
+      delete(value, root.right, root)
     end
   end
 
-  def new_delete_node(root, mama)
+  def delete_node(root, mama)
     case root.count_chidren
     when 0
       root.data < mama.data ? mama.left = nil : mama.right = nil
@@ -154,7 +99,7 @@ class Tree
         current_node = current_node.left
       end
       root.data = current_node.data
-      new_delete_node(current_node, papa)
+      delete_node(current_node, papa)
     end
   end
 
@@ -183,6 +128,24 @@ class Tree
     end
     result
   end
+
+  # pseudo code for recursive level order
+  # given a tree
+  # start at the node
+  # push the node and it's children to the discovered nodes queue (array) unless the children are nil
+  # if the discovered nodes queue is empty return
+  # else call the level order on the first item of the queue
+
+  def level_order_rec(result = [], discovered_nodes = [@root])
+    return result if discovered_nodes.empty?
+
+    current_node = discovered_nodes[0]
+    result << current_node.data
+    discovered_nodes << current_node.left unless current_node.left.nil?
+    discovered_nodes << current_node.right unless current_node.right.nil?
+    discovered_nodes.shift
+    level_order_rec(result, discovered_nodes)
+  end
 end
 
 simple_array = [1, 2, 3, 4, 5, 6]
@@ -191,10 +154,14 @@ data_arr = [1, 7, 4, 24, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 1233
 my_simple_tree = Tree.new(simple_array)
 my_treee = Tree.new(data_arr)
 
+# my_simple_tree.pretty_print
+# p my_simple_tree.level_order_it
+# my_simple_tree.pretty_print
+# p my_simple_tree.level_order_it {|node| node.data += 3}
+# my_simple_tree.pretty_print
+
+my_simple_tree.delete(4)
 my_simple_tree.pretty_print
-p my_simple_tree.level_order_it
-my_simple_tree.pretty_print
-p my_simple_tree.level_order_it {|node| node.data += 3}
-my_simple_tree.pretty_print
+p my_simple_tree.level_order_rec
 
 
