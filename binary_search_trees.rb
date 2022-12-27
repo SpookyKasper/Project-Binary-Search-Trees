@@ -157,19 +157,39 @@ class Tree
       new_delete_node(current_node, papa)
     end
   end
+
+  # pseudo code for level_order_it
+  # given a tree
+  # start at the root
+  # push the root node to the discovered nodes array
+  # push the root's children to the discovered nodes array
+  # check the data of the first node in the queue and delete it
+  # repeat process for the next node in the queue
+
+  def level_order_it
+    result = []
+    discovered_nodes = [@root]
+    until discovered_nodes.empty?
+      current_node = discovered_nodes[0]
+      discovered_nodes << current_node.left unless current_node.left.nil?
+      discovered_nodes << current_node.right unless current_node.right.nil?
+      result << current_node.data
+      discovered_nodes.shift
+    end
+    result
+  end
 end
 
-simple_array = [1, 2, 3, 4, 5, 6, 7]
+simple_array = [1, 2, 3, 4, 5, 6]
 data_arr = [1, 7, 4, 24, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 12338, 12, 234, 29, 98, 200, 245, 11]
 
 my_simple_tree = Tree.new(simple_array)
 my_treee = Tree.new(data_arr)
 
+my_simple_tree.pretty_print
+p my_simple_tree.level_order_it
+my_simple_tree.pretty_print
 
 my_treee.pretty_print
-p my_treee.new_delete(56)
-my_treee.pretty_print
-puts my_treee.new_delete(98)
-my_treee.pretty_print
-puts my_treee.new_delete(12)
+p my_treee.level_order_it
 my_treee.pretty_print
