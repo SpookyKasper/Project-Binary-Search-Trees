@@ -118,23 +118,11 @@ class Tree
       current_node = discovered_nodes[0]
       discovered_nodes << current_node.left unless current_node.left.nil?
       discovered_nodes << current_node.right unless current_node.right.nil?
-      if block
-        block_result = yield current_node
-        result << block_result
-      else
-        result << current_node.data
-      end
+      block ? result << (yield current_node) : result << current_node.data
       discovered_nodes.shift
     end
     result
   end
-
-  # pseudo code for recursive level order
-  # given a tree
-  # start at the node
-  # push the node and it's children to the discovered nodes queue (array) unless the children are nil
-  # if the discovered nodes queue is empty return
-  # else call the level order on the first item of the queue
 
   def level_order_rec(result = [], discovered_nodes = [@root])
     return result if discovered_nodes.empty?
@@ -154,11 +142,11 @@ data_arr = [1, 7, 4, 24, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 1233
 my_simple_tree = Tree.new(simple_array)
 my_treee = Tree.new(data_arr)
 
-# my_simple_tree.pretty_print
-# p my_simple_tree.level_order_it
-# my_simple_tree.pretty_print
-# p my_simple_tree.level_order_it {|node| node.data += 3}
-# my_simple_tree.pretty_print
+my_simple_tree.pretty_print
+p my_simple_tree.level_order_it
+my_simple_tree.pretty_print
+p my_simple_tree.level_order_it {|node| node.data += 3}
+my_simple_tree.pretty_print
 
 my_simple_tree.delete(4)
 my_simple_tree.pretty_print
