@@ -166,14 +166,19 @@ class Tree
   # check the data of the first node in the queue and delete it
   # repeat process for the next node in the queue
 
-  def level_order_it
+  def level_order_it(&block)
     result = []
     discovered_nodes = [@root]
     until discovered_nodes.empty?
       current_node = discovered_nodes[0]
       discovered_nodes << current_node.left unless current_node.left.nil?
       discovered_nodes << current_node.right unless current_node.right.nil?
-      result << current_node.data
+      if block
+        block_result = yield current_node
+        result << block_result
+      else
+        result << current_node.data
+      end
       discovered_nodes.shift
     end
     result
@@ -189,7 +194,7 @@ my_treee = Tree.new(data_arr)
 my_simple_tree.pretty_print
 p my_simple_tree.level_order_it
 my_simple_tree.pretty_print
+p my_simple_tree.level_order_it {|node| node.data += 3}
+my_simple_tree.pretty_print
 
-my_treee.pretty_print
-p my_treee.level_order_it
-my_treee.pretty_print
+
