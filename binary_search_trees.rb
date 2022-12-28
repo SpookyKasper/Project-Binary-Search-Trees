@@ -124,15 +124,15 @@ class Tree
     result
   end
 
-  def level_order_rec(result = [], discovered_nodes = [@root])
+  def level_order_rec(result = [], discovered_nodes = [@root], &block)
     return result if discovered_nodes.empty?
 
     current_node = discovered_nodes[0]
-    result << current_node.data
     discovered_nodes << current_node.left unless current_node.left.nil?
     discovered_nodes << current_node.right unless current_node.right.nil?
+    block ? result << (yield current_node) : result << current_node.data
     discovered_nodes.shift
-    level_order_rec(result, discovered_nodes)
+    level_order_rec(result, discovered_nodes, &block)
   end
 end
 
@@ -151,5 +151,6 @@ my_simple_tree.pretty_print
 my_simple_tree.delete(4)
 my_simple_tree.pretty_print
 p my_simple_tree.level_order_rec
+p my_simple_tree.level_order_rec {|node| node.data - 20}
 
 
