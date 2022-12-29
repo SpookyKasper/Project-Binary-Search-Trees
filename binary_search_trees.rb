@@ -134,6 +134,34 @@ class Tree
     discovered_nodes.shift
     level_order_rec(result, discovered_nodes, &block)
   end
+
+  # pseudo code for inorder
+  # navigate the tree inorder and push the data of the visited nodes to the result array:
+  # create a discovered_nodes empty array
+  # push the root to the array
+  # starting at the first item in the queue
+  # check is left children
+  # if the left children is a leaf
+    # push the value to the arrray
+    # push the value of the current node
+  # else
+    # call the inorder method on the left children
+  # check the right children
+  # if it is a leaf,
+    # push the value to the array
+  # else
+    # call the inorder method on the right child
+
+
+  def inorder(current_node = @root, result = [], &block)
+    return if current_node.nil?
+    return current_node.data if current_node.is_leaf
+
+    result << inorder(current_node.left, result, &block)
+    result << current_node.data
+    result << inorder(current_node.right, result, &block)
+    end
+  end
 end
 
 simple_array = [1, 2, 3, 4, 5, 6]
@@ -143,14 +171,6 @@ my_simple_tree = Tree.new(simple_array)
 my_treee = Tree.new(data_arr)
 
 my_simple_tree.pretty_print
-p my_simple_tree.level_order_it
+p my_simple_tree.inorder
 my_simple_tree.pretty_print
-p my_simple_tree.level_order_it {|node| node.data += 3}
-my_simple_tree.pretty_print
-
-my_simple_tree.delete(4)
-my_simple_tree.pretty_print
-p my_simple_tree.level_order_rec
-p my_simple_tree.level_order_rec {|node| node.data - 20}
-
 
