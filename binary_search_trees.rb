@@ -103,14 +103,6 @@ class Tree
     end
   end
 
-  # pseudo code for level_order_it
-  # given a tree
-  # start at the root
-  # push the root node to the discovered nodes array
-  # push the root's children to the discovered nodes array
-  # check the data of the first node in the queue and delete it
-  # repeat process for the next node in the queue
-
   def level_order_it(&block)
     result = []
     discovered_nodes = [@root]
@@ -135,29 +127,31 @@ class Tree
     level_order_rec(result, discovered_nodes, &block)
   end
 
-
   def inorder(current_node = @root, result = [], &block)
-    puts "this is the current node data #{current_node.data}"
     return if current_node.nil?
-    return current_node.data if current_node.is_leaf
+    result << current_node.data && return if current_node.is_leaf
 
-    result << inorder(current_node.left, result, &block)
-    puts "printing the result after left child #{result}"
+    inorder(current_node.left, result)
     result << current_node.data
-    puts "printing the result after center #{result}"
-    result << inorder(current_node.right, result, &block)
-    puts "printing the result after the right child #{result}"
-    return result
+    inorder(current_node.right, result)
+    result
   end
 end
 
+array_3 = [1, 2, 3]
 simple_array = [1, 2, 3, 4, 5, 6]
 data_arr = [1, 7, 4, 24, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 12338, 12, 234, 29, 98, 200, 245, 11]
 
 my_simple_tree = Tree.new(simple_array)
 my_treee = Tree.new(data_arr)
+simple = Tree.new(array_3)
+
+
+# simple.pretty_print
+# p simple.inorder
+# simple.pretty_print
 
 my_simple_tree.pretty_print
 p my_simple_tree.inorder
 my_simple_tree.pretty_print
-
+p my_treee.inorder
