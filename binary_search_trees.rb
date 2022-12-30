@@ -135,32 +135,19 @@ class Tree
     level_order_rec(result, discovered_nodes, &block)
   end
 
-  # pseudo code for inorder
-  # navigate the tree inorder and push the data of the visited nodes to the result array:
-  # create a discovered_nodes empty array
-  # push the root to the array
-  # starting at the first item in the queue
-  # check is left children
-  # if the left children is a leaf
-    # push the value to the arrray
-    # push the value of the current node
-  # else
-    # call the inorder method on the left children
-  # check the right children
-  # if it is a leaf,
-    # push the value to the array
-  # else
-    # call the inorder method on the right child
-
 
   def inorder(current_node = @root, result = [], &block)
+    puts "this is the current node data #{current_node.data}"
     return if current_node.nil?
     return current_node.data if current_node.is_leaf
 
     result << inorder(current_node.left, result, &block)
+    puts "printing the result after left child #{result}"
     result << current_node.data
+    puts "printing the result after center #{result}"
     result << inorder(current_node.right, result, &block)
-    end
+    puts "printing the result after the right child #{result}"
+    return result
   end
 end
 
