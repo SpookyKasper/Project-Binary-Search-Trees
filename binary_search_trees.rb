@@ -129,11 +129,10 @@ class Tree
 
   def inorder(current_node = @root, result = [], &block)
     return if current_node.nil?
-    result << current_node.data && return if current_node.is_leaf
 
-    inorder(current_node.left, result)
-    result << current_node.data
-    inorder(current_node.right, result)
+    inorder(current_node.left, result, &block)
+    block ? (yield current_node) : result << current_node.data
+    inorder(current_node.right, result, &block)
     result
   end
 end
@@ -142,16 +141,17 @@ array_3 = [1, 2, 3]
 simple_array = [1, 2, 3, 4, 5, 6]
 data_arr = [1, 7, 4, 24, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 12338, 12, 234, 29, 98, 200, 245, 11]
 
+simple = Tree.new(array_3)
 my_simple_tree = Tree.new(simple_array)
 my_treee = Tree.new(data_arr)
-simple = Tree.new(array_3)
 
 
 # simple.pretty_print
 # p simple.inorder
 # simple.pretty_print
 
-my_simple_tree.pretty_print
-p my_simple_tree.inorder
-my_simple_tree.pretty_print
-p my_treee.inorder
+# my_simple_tree.pretty_print
+# p my_simple_tree.inorder
+# my_simple_tree.pretty_print
+p my_treee.inorder {|node| node.data += 4}
+my_treee.pretty_print
