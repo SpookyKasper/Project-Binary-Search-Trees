@@ -135,6 +135,24 @@ class Tree
     inorder(current_node.right, result, &block)
     result
   end
+
+  def preorder(current_node = @root, result = [], &block)
+    return if current_node.nil?
+
+    block ? (yield current_node) : result << current_node.data
+    preorder(current_node.left, result, &block)
+    preorder(current_node.right, result, &block)
+    result
+  end
+
+  def postorder(current_node = @root, result = [], &block)
+    return if current_node.nil?
+
+    postorder(current_node.left, result, &block)
+    postorder(current_node.right, result, &block)
+    block ? (yield current_node) : result << current_node.data
+    result
+  end
 end
 
 array_3 = [1, 2, 3]
@@ -153,5 +171,10 @@ my_treee = Tree.new(data_arr)
 # my_simple_tree.pretty_print
 # p my_simple_tree.inorder
 # my_simple_tree.pretty_print
-p my_treee.inorder {|node| node.data += 4}
+p my_treee.inorder {|node| node.data += 5}
+p my_treee.inorder
 my_treee.pretty_print
+p my_treee.preorder
+p my_treee.preorder {|node| node.data -= 3}
+my_treee.pretty_print
+p my_treee.postorder
