@@ -60,7 +60,7 @@ class Tree
     end
   end
 
-  def find(value, root=@root)
+  def find(value, root = @root)
     return if root.nil?
     return root if root.data == value
 
@@ -144,7 +144,7 @@ class Tree
     result
   end
 
-  def height(node, path_left = 0, path_right = 0)
+  def height(node)
     return 0 if node.left.nil? && node.right.nil?
 
     if node.left
@@ -157,30 +157,45 @@ class Tree
     height
   end
 
+  # pseudocode for depth
+  # given a node return it's depth
+  # start at the root
+  # if the node data equals the root data return 0
+  # if the node.data is smaller than the root data
+    # depth gets + 1
+    # recursively call the depth method on the left child
+  # otherwise
+    # depths gets + 1
+    # recursively call the depth method on the right child
+  def depth(node, current_node = @root, depth = 0)
+    return 0 if node.data == current_node.data
+    puts "this is the current node #{current_node.data}"
+    puts "this is the depth so far #{depth}"
+
+    if node.data < current_node.data
+      depth = 1 + depth(node, current_node.left, depth)
+    elsif node.data > current_node.data
+      depth = 1 + depth(node, current_node.right, depth)
+    end
+    depth
+  end
 end
 
-array_3 = [1, 2, 3, 5]
-simple_array = [1, 2, 3, 4, 5, 6, 7, 8]
-data_arr = [1, 7, 4, 24, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 12338, 12, 234, 29, 98, 200, 245, 11]
+easy = [1, 2, 3, 5]
+medium = [1, 2, 3, 4, 5, 6, 7, 8]
+hardcore = [1, 7, 4, 24, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 12338, 12, 234, 29, 98, 200, 245, 11]
 
-simple = Tree.new(array_3)
-my_simple_tree = Tree.new(simple_array)
-my_treee = Tree.new(data_arr)
+easy_tree = Tree.new(easy)
+medium_tree = Tree.new(medium)
+hardcore_tree = Tree.new(hardcore)
 
 
-simple.pretty_print
-node = simple.find(3)
-p simple.height(node)
+hardcore_tree.pretty_print
+node = hardcore_tree.find(200)
+p hardcore_tree.depth(node)
 
-# p my_simple_tree.inorder
-# my_simple_tree.pretty_print
-# node = my_simple_tree.find(5)
-# p my_simple_tree.height(node)
+easy_tree.pretty_print
+node = easy_tree.find(1)
+puts easy_tree.depth(node)
 
-my_treee.pretty_print
-my_treee.delete(98)
-node = my_treee.find(24)
-my_treee.pretty_print
-my_treee.insert(6)
-my_treee.pretty_print
-p my_treee.height(node)
+
