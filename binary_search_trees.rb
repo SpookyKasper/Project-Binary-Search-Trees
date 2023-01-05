@@ -144,34 +144,17 @@ class Tree
     result
   end
 
-  # pseudocode height
-  # given a node return the longest path to a leaf
-  # check the longest path on the left
-  # check the longest path on the right
-  # compare the paths an return the longest
-
-  def height(node, path_left = 0, path_right = 0, max_height = 0)
-    # check the longest path on the left
-    puts "this is the current node #{node.data}"
-    # puts "this is the current path_left size #{path_left}"
+  def height(node, path_left = 0, path_right = 0)
     return 0 if node.left.nil? && node.right.nil?
 
     if node.left
-      path_left = 1 + height(node.left, path_left, path_right, max_height)
+      path_left = 1 + height(node.left)
     end
-    # puts "this is the path left after the depth #{path_left}"
-    # check the longest path on the right
     if node.right
-      path_right = 1 + height(node.right, path_left, path_right, max_height)
+      path_right = 1 + height(node.right)
     end
-    # puts "this is the path right after the depth #{path_right}"
-
     height = path_left >= path_right ? path_left : path_right
-    # max_height = max_height >= height ? max_height : height
-    # max_height
     height
-
-    # compare the paths and return the longest
   end
 
 end
@@ -196,6 +179,8 @@ p simple.height(node)
 
 my_treee.pretty_print
 my_treee.delete(98)
+node = my_treee.find(24)
 my_treee.pretty_print
-# node = my_treee.find(24)
-# p my_treee.height(node)
+my_treee.insert(6)
+my_treee.pretty_print
+p my_treee.height(node)
