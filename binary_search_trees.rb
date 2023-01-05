@@ -1,17 +1,15 @@
 class Node
   include Comparable
 
-  attr_accessor :left, :data, :right, :is_leaf
+  attr_accessor :left, :data, :right
 
   def initialize(data, left=nil, right=nil)
     @data = data
     @left = left
     @right = right
-    @is_leaf = @left.nil? && @right.nil?
-    @children = count_chidren
   end
 
-  def count_chidren
+  def count_children
     count = 0
     unless @left.nil? then count += 1 end
     unless @right.nil? then count += 1 end
@@ -85,7 +83,7 @@ class Tree
   end
 
   def delete_node(root, mama)
-    case root.count_chidren
+    case root.count_children
     when 0
       root.data < mama.data ? mama.left = nil : mama.right = nil
     when 1
@@ -160,20 +158,25 @@ class Tree
   # check the longest path on the right
   # compare the paths an return the longest
 
-  def height(node, path_left = 0, path_right = 0, height = 0)
+  def height(node, path_left = 0, path_right = 0, max_height = 0)
     # check the longest path on the left
     puts "this is the current node #{node.data}"
-    return 0 if node.is_leaf
+    # puts "this is the current path_left size #{path_left}"
+    return 0 if node.left.nil? && node.right.nil?
 
     if node.left
-      path_left = 1 + height(node.left)
+      path_left = 1 + height(node.left, path_left, path_right, max_height)
     end
+    # puts "this is the path left after the depth #{path_left}"
     # check the longest path on the right
     if node.right
-      path_right = 1 + height(node.right)
+      path_right = 1 + height(node.right, path_left, path_right, max_height)
     end
+    # puts "this is the path right after the depth #{path_right}"
 
     height = path_left >= path_right ? path_left : path_right
+    # max_height = max_height >= height ? max_height : height
+    # max_height
     height
 
     # compare the paths and return the longest
@@ -194,10 +197,11 @@ simple.pretty_print
 node = simple.find(3)
 p simple.height(node)
 
+p my_simple_tree.inorder
 my_simple_tree.pretty_print
 node = my_simple_tree.find(5)
 p my_simple_tree.height(node)
 
-my_treee.pretty_print
-node = my_treee.find(24)
-p my_treee.height(node)
+# my_treee.pretty_print
+# node = my_treee.find(24)
+# p my_treee.height(node)
