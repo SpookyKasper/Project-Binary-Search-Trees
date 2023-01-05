@@ -153,10 +153,36 @@ class Tree
     block ? (yield current_node) : result << current_node.data
     result
   end
+
+  # pseudocode height
+  # given a node return the longest path to a leaf
+  # check the longest path on the left
+  # check the longest path on the right
+  # compare the paths an return the longest
+
+  def height(node, path_left = 0, path_right = 0, height = 0)
+    # check the longest path on the left
+    puts "this is the current node #{node.data}"
+    return 0 if node.is_leaf
+
+    if node.left
+      path_left = 1 + height(node.left)
+    end
+    # check the longest path on the right
+    if node.right
+      path_right = 1 + height(node.right)
+    end
+
+    height = path_left >= path_right ? path_left : path_right
+    height
+
+    # compare the paths and return the longest
+  end
+
 end
 
-array_3 = [1, 2, 3]
-simple_array = [1, 2, 3, 4, 5, 6]
+array_3 = [1, 2, 3, 5]
+simple_array = [1, 2, 3, 4, 5, 6, 7, 8]
 data_arr = [1, 7, 4, 24, 23, 10, 12, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 3234, 12338, 12, 234, 29, 98, 200, 245, 11]
 
 simple = Tree.new(array_3)
@@ -164,17 +190,14 @@ my_simple_tree = Tree.new(simple_array)
 my_treee = Tree.new(data_arr)
 
 
-# simple.pretty_print
-# p simple.inorder
-# simple.pretty_print
+simple.pretty_print
+node = simple.find(3)
+p simple.height(node)
 
-# my_simple_tree.pretty_print
-# p my_simple_tree.inorder
-# my_simple_tree.pretty_print
-p my_treee.inorder {|node| node.data += 5}
-p my_treee.inorder
+my_simple_tree.pretty_print
+node = my_simple_tree.find(5)
+p my_simple_tree.height(node)
+
 my_treee.pretty_print
-p my_treee.preorder
-p my_treee.preorder {|node| node.data -= 3}
-my_treee.pretty_print
-p my_treee.postorder
+node = my_treee.find(24)
+p my_treee.height(node)
