@@ -157,25 +157,13 @@ class Tree
     height
   end
 
-  # pseudocode for depth
-  # given a node return it's depth
-  # start at the root
-  # if the node data equals the root data return 0
-  # if the node.data is smaller than the root data
-    # depth gets + 1
-    # recursively call the depth method on the left child
-  # otherwise
-    # depths gets + 1
-    # recursively call the depth method on the right child
-  def depth(node, current_node = @root, depth = 0)
+  def depth(node, current_node = @root)
     return 0 if node.data == current_node.data
-    puts "this is the current node #{current_node.data}"
-    puts "this is the depth so far #{depth}"
 
     if node.data < current_node.data
-      depth = 1 + depth(node, current_node.left, depth)
+      depth = 1 + depth(node, current_node.left)
     elsif node.data > current_node.data
-      depth = 1 + depth(node, current_node.right, depth)
+      depth = 1 + depth(node, current_node.right)
     end
     depth
   end
