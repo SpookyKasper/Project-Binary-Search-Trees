@@ -69,17 +69,9 @@ class Tree
 
   def delete(value, root = @root, mama = @root)
     return if root.nil?
+    if value == root.data then delete_node(root, mama) and return value end
 
-    if value == root.data
-      delete_node(root, mama)
-      return value
-    end
-
-    if value < root.data
-      delete(value, root.left, root)
-    elsif value > root.data
-      delete(value, root.right, root)
-    end
+    value < root.data ? delete(value, root.left, root) : delete(value, root.right, root)
   end
 
   def delete_node(root, mama)
@@ -197,11 +189,13 @@ simple.pretty_print
 node = simple.find(3)
 p simple.height(node)
 
-p my_simple_tree.inorder
-my_simple_tree.pretty_print
-node = my_simple_tree.find(5)
-p my_simple_tree.height(node)
+# p my_simple_tree.inorder
+# my_simple_tree.pretty_print
+# node = my_simple_tree.find(5)
+# p my_simple_tree.height(node)
 
-# my_treee.pretty_print
+my_treee.pretty_print
+my_treee.delete(98)
+my_treee.pretty_print
 # node = my_treee.find(24)
 # p my_treee.height(node)
