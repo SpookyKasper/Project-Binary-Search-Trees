@@ -144,19 +144,6 @@ class Tree
     result
   end
 
-  def height(node)
-    return 0 if node.left.nil? && node.right.nil?
-
-    if node.left
-      path_left = 1 + height(node.left)
-    end
-    if node.right
-      path_right = 1 + height(node.right)
-    end
-    height = path_left >= path_right ? path_left : path_right
-    height
-  end
-
   def depth(node, current_node = @root)
     return 0 if node.data == current_node.data
 
@@ -166,6 +153,51 @@ class Tree
       depth = 1 + depth(node, current_node.right)
     end
     depth
+  end
+
+  def height(node)
+    return nil if node.nil?
+    return 0 if node.left.nil? && node.right.nil?
+
+    node.left ? path_left = 1 + height(node.left) : path_left = 0
+    node.right ? path_right = 1 + height(node.right) : path_right = 0
+    height = path_left >= path_right ? path_left : path_right
+    height
+  end
+
+  # pseudocode for balanced?
+  # substract the height of the left subtree to the height of the right subtree
+  # if the absolut value of the result is bigger than 2 return false
+  # else recursively call the balanced? on the left subtree
+  # recursively call the balanced? on the right subtree
+  # return true
+
+  def balanced?(current_node = @root)
+    return true if current_node.nil?
+    return true if current_node.left.nil? && current_node.right.nil?
+    puts "this is the current node #{current_node.data}"
+
+    left_subtree_height = height(current_node.left) || -1
+    puts "this is the left node height #{left_subtree_height}"
+
+    right_subtree_height = height(current_node.right) || -1
+    puts "this is the right node height #{right_subtree_height}"
+
+    diff = left_subtree_height - right_subtree_height
+    puts "this is the diff so far #{diff.abs}"
+
+    return false if diff.abs > 1
+    puts "this step was balanced about to check the childs"
+
+    result_left = balanced?(current_node.left)
+    puts "this was the left result = #{result_left}"
+    return false unless result_left
+
+    result_right = balanced?(current_node.right)
+    puts "this was the right result = #{result_right}"
+    return false unless result_right
+
+    true
   end
 end
 
@@ -178,12 +210,16 @@ medium_tree = Tree.new(medium)
 hardcore_tree = Tree.new(hardcore)
 
 
-hardcore_tree.pretty_print
-node = hardcore_tree.find(200)
-p hardcore_tree.depth(node)
-
 easy_tree.pretty_print
-node = easy_tree.find(1)
-puts easy_tree.depth(node)
+my_node = easy_tree.find(3)
+p easy_tree.height(my_node)
 
+hardcore_tree.pretty_print
+my_mega = hardcore_tree.find(1)
+p hardcore_tree.height(my_mega)
 
+easy_tree.insert(1.5)
+easy_tree.insert(2.5)
+easy_tree.insert(6)
+easy_tree.pretty_print
+p easy_tree.balanced?
