@@ -25,7 +25,6 @@ end
 
 class Tree
   attr_reader :root
-
   def initialize(array)
     @root = build_tree(array)
   end
@@ -175,30 +174,29 @@ class Tree
   def balanced?(current_node = @root)
     return true if current_node.nil?
     return true if current_node.left.nil? && current_node.right.nil?
-    puts "this is the current node #{current_node.data}"
-
     left_subtree_height = height(current_node.left) || -1
-    puts "this is the left node height #{left_subtree_height}"
-
     right_subtree_height = height(current_node.right) || -1
-    puts "this is the right node height #{right_subtree_height}"
-
     diff = left_subtree_height - right_subtree_height
-    puts "this is the diff so far #{diff.abs}"
-
     return false if diff.abs > 1
-    puts "this step was balanced about to check the childs"
-
     result_left = balanced?(current_node.left)
-    puts "this was the left result = #{result_left}"
     return false unless result_left
-
     result_right = balanced?(current_node.right)
-    puts "this was the right result = #{result_right}"
     return false unless result_right
-
     true
   end
+
+  # pseudo for rebalance method
+  # if the tree is balanced return
+  # oterwhise, make an array of the nodes with a traversal method
+  # self gets the result of calling build tree on that array
+
+  def rebalance
+    return if self.balanced?
+
+    array = self.inorder
+    @root = build_tree(array)
+  end
+
 end
 
 easy = [1, 2, 3, 5]
@@ -217,9 +215,15 @@ p easy_tree.height(my_node)
 hardcore_tree.pretty_print
 my_mega = hardcore_tree.find(1)
 p hardcore_tree.height(my_mega)
+p hardcore_tree.balanced?
 
 easy_tree.insert(1.5)
 easy_tree.insert(2.5)
+easy_tree.insert(5.5)
 easy_tree.insert(6)
 easy_tree.pretty_print
 p easy_tree.balanced?
+
+easy_tree.rebalance
+easy_tree.pretty_print
+
