@@ -207,23 +207,23 @@ easy_tree = Tree.new(easy)
 medium_tree = Tree.new(medium)
 hardcore_tree = Tree.new(hardcore)
 
-
-easy_tree.pretty_print
-my_node = easy_tree.find(3)
-p easy_tree.height(my_node)
-
-hardcore_tree.pretty_print
-my_mega = hardcore_tree.find(1)
-p hardcore_tree.height(my_mega)
-p hardcore_tree.balanced?
-
-easy_tree.insert(1.5)
-easy_tree.insert(2.5)
-easy_tree.insert(5.5)
-easy_tree.insert(6)
-easy_tree.pretty_print
-p easy_tree.balanced?
-
-easy_tree.rebalance
-easy_tree.pretty_print
+new_binary_search_tree = Tree.new(Array.new(20) {rand(1..100)})
+new_binary_search_tree.pretty_print
+p new_binary_search_tree.balanced?
+p new_binary_search_tree.level_order_rec
+p new_binary_search_tree.preorder
+p new_binary_search_tree.inorder
+p new_binary_search_tree.postorder
+new_binary_search_tree.insert(122)
+new_binary_search_tree.insert(102)
+new_binary_search_tree.insert(162)
+new_binary_search_tree.pretty_print
+p new_binary_search_tree.balanced?
+new_binary_search_tree.rebalance
+new_binary_search_tree.pretty_print
+p new_binary_search_tree.balanced?
+p new_binary_search_tree.level_order_rec
+p new_binary_search_tree.preorder
+p new_binary_search_tree.inorder
+p new_binary_search_tree.postorder
 
